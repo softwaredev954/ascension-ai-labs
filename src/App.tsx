@@ -37,32 +37,41 @@ const conversations = [
   { initials: 'RL', name: 'Rico Lim', message: 'What payment methods do you accept?', time: '1 hr ago', state: 'AI replied', color: 'blue' },
 ]
 
-function App() {
+interface AppProps {
+  email: string
+  fullName: string
+  workspaceName: string
+  onSignOut: () => void
+}
+
+function App({ email, fullName, workspaceName, onSignOut }: AppProps) {
   const [active, setActive] = useState('Overview')
   const [mobileOpen, setMobileOpen] = useState(false)
   const [search, setSearch] = useState('')
   const shownConversations = conversations.filter((item) => `${item.name} ${item.message}`.toLowerCase().includes(search.toLowerCase()))
+  const displayName = fullName || email
+  const initials = displayName.split(/[.\s@_-]+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join('').toUpperCase() || 'U'
 
   return (
     <div className="app-shell">
       <aside className={`sidebar ${mobileOpen ? 'sidebar-open' : ''}`}>
         <div className="brand"><div className="brand-mark"><Icon name="spark" size={21}/></div><div><strong>ASCENSION</strong><span>AI LABS</span></div><button className="mobile-close icon-button" onClick={() => setMobileOpen(false)} aria-label="Close navigation"><Icon name="close"/></button></div>
         <div className="workspace-label">WORKSPACE</div>
-        <button className="workspace-switch"><span className="workspace-avatar">A</span><span className="workspace-name"><strong>Acme Studio</strong><small>Free plan</small></span><span className="chevron">⌄</span></button>
+        <button className="workspace-switch"><span className="workspace-avatar">{workspaceName.charAt(0).toUpperCase() || 'A'}</span><span className="workspace-name"><strong>{workspaceName || 'My workspace'}</strong><small>Free plan</small></span><span className="chevron">⌄</span></button>
         <nav className="main-nav" aria-label="Main navigation">
           <div className="nav-group-label">MANAGE</div>
           {navItems.map((item) => <button key={item.label} className={`nav-item ${active === item.label ? 'nav-active' : ''}`} onClick={() => { setActive(item.label); setMobileOpen(false) }}><Icon name={item.icon}/><span>{item.label}</span>{item.label === 'Conversations' && <span className="nav-count">8</span>}</button>)}
           <div className="nav-group-label tools-label">PREFERENCES</div>
           <button className={`nav-item ${active === 'Settings' ? 'nav-active' : ''}`} onClick={() => { setActive('Settings'); setMobileOpen(false) }}><Icon name="settings"/><span>Settings</span></button>
         </nav>
-        <div className="sidebar-bottom"><div className="usage-card"><div className="usage-title"><span>Monthly usage</span><span>68%</span></div><div className="usage-track"><span/></div><p>680 of 1,000 AI responses</p><button onClick={() => setActive('Settings')}>View plan details <Icon name="arrow" size={14}/></button></div><button className="profile"><span className="profile-avatar">JD</span><span className="profile-text"><strong>Jamie Dela Cruz</strong><small>Admin</small></span><span className="chevron">···</span></button></div>
+        <div className="sidebar-bottom"><div className="usage-card"><div className="usage-title"><span>Monthly usage</span><span>68%</span></div><div className="usage-track"><span/></div><p>680 of 1,000 AI responses</p><button onClick={() => setActive('Settings')}>View plan details <Icon name="arrow" size={14}/></button></div><button className="profile" onClick={onSignOut} aria-label={`Sign out ${displayName}`}><span className="profile-avatar">{initials}</span><span className="profile-text"><strong>{displayName}</strong><small>Owner · Sign out</small></span><span className="chevron">↗</span></button></div>
       </aside>
       {mobileOpen && <button className="mobile-scrim" aria-label="Close navigation" onClick={() => setMobileOpen(false)}/>}
 
       <main className="main-area">
-        <header className="topbar"><button className="mobile-menu icon-button" onClick={() => setMobileOpen(true)} aria-label="Open navigation"><Icon name="menu"/></button><div className="breadcrumb">Workspace <span>/</span> <strong>{active}</strong></div><div className="topbar-actions"><label className="search-box"><Icon name="search" size={17}/><input aria-label="Search conversations" placeholder="Search conversations..." value={search} onChange={(event) => setSearch(event.target.value)}/><kbd>⌘ K</kbd></label><button className="notification icon-button" aria-label="Notifications"><Icon name="bell"/><i/></button><div className="top-avatar">JD</div></div></header>
+        <header className="topbar"><button className="mobile-menu icon-button" onClick={() => setMobileOpen(true)} aria-label="Open navigation"><Icon name="menu"/></button><div className="breadcrumb">Workspace <span>/</span> <strong>{active}</strong></div><div className="topbar-actions"><label className="search-box"><Icon name="search" size={17}/><input aria-label="Search conversations" placeholder="Search conversations..." value={search} onChange={(event) => setSearch(event.target.value)}/><kbd>⌘ K</kbd></label><button className="notification icon-button" aria-label="Notifications"><Icon name="bell"/><i/></button><div className="top-avatar">{initials}</div></div></header>
         <div className="page-content">
-          <section className="welcome-row"><div><div className="eyebrow"><span className="live-dot"/> YOUR BUSINESS, IN GOOD HANDS</div><h1>{active === 'Overview' ? 'Good morning, Jamie' : active}</h1><p className="page-subtitle">Here’s what’s happening with your assistant today.</p></div><button className="date-button"><Icon name="clock" size={16}/> Last 30 days <span>⌄</span></button></section>
+          <section className="welcome-row"><div><div className="eyebrow"><span className="live-dot"/> YOUR BUSINESS, IN GOOD HANDS</div><h1>{active === 'Overview' ? `Good morning, ${fullName.split(' ')[0] || 'there'}` : active}</h1><p className="page-subtitle">Here’s what’s happening with your assistant today.</p></div><button className="date-button"><Icon name="clock" size={16}/> Last 30 days <span>⌄</span></button></section>
 
           <section className="stats-grid" aria-label="Business statistics">
             <article className="stat-card"><div className="stat-top"><span>Total conversations</span><span className="stat-icon blue-icon"><Icon name="chat" size={17}/></span></div><div className="stat-value">1,284</div><div className="stat-foot"><span className="trend-up">↗ 12.8%</span><span>vs. last month</span></div><div className="sparkline spark-blue"><svg viewBox="0 0 130 34" preserveAspectRatio="none"><path d="M1 27 C12 25 14 13 25 18 S42 28 51 18 S68 16 77 19 S91 6 100 12 S117 7 129 2"/></svg></div></article>

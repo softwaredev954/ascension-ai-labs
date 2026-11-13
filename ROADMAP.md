@@ -2,8 +2,9 @@
 
 The work is intentionally incremental; phases are not considered complete until implemented and verified.
 
-- [x] **Phase 1 — Foundation (initial UI only):** React/TypeScript/Vite scaffold, Tailwind setup, responsive dashboard shell and shared visual language. Local build still needs verification.
-- [ ] **Phase 2 — Authentication:** Supabase project/configuration, registration, login, recovery, session handling, and protected routes.
+- [x] **Phase 1 — Foundation (initial UI only):** React/TypeScript/Vite scaffold, Tailwind setup, responsive dashboard shell and shared visual language. Verify the foundation with `npm run build`.
+- [x] **Phase 2 — Authentication foundation:** Supabase registration, login, recovery, session handling, workspace bootstrap migration, and RLS policies are implemented locally.
+- [ ] **Phase 2 verification:** Configure the hosted Supabase project, apply the migration, and test email redirects plus unauthenticated and cross-tenant access.
 - [ ] **Phase 3 — Dashboard data:** Replace mock metrics/activity with tenant-scoped, real data and empty/loading/error states.
 - [ ] **Phase 4 — Knowledge base:** Tenant-scoped PostgreSQL schema, RLS, products, FAQs, and business information CRUD.
 - [ ] **Phase 5 — AI integration:** Server-side Gemini adapter, approved-context retrieval, safe fallback, conversation persistence, and abuse controls.
